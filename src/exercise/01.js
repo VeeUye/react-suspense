@@ -2,14 +2,21 @@
 // http://localhost:3000/isolated/exercise/01.js
 
 import * as React from 'react'
-import {PokemonDataView, fetchPokemon} from '../pokemon'
+import {PokemonDataView, fetchPokemon, PokemonErrorBoundary } from '../pokemon'
 import {Suspense} from 'react'
 
 let pokemon
+let pokemonError
 
-const pokemonPromise = fetchPokemon('pikachu').then(p => (pokemon = p))
+const pokemonPromise = fetchPokemon('piachu').then(
+    result => (pokemon = result),
+    error => (pokemonError = error)
+)
 
 function PokemonInfo() {
+    if (pokemonError) {
+        throw pokemonError
+    }
     if (!pokemon) {
         throw pokemonPromise
     }
@@ -26,14 +33,15 @@ function PokemonInfo() {
 
 function App() {
   return (
-    <div className="pokemon-info-app">
-      <div className="pokemon-info">
-          <Suspense fallback={<div>Loading Pokeman...</div>}>
-              <PokemonInfo />
-          </Suspense>
-
-      </div>
-    </div>
+        <div className="pokemon-info-app">
+            <div className="pokemon-info">
+                <PokemonErrorBoundary>
+                    <Suspense fallback={<div>Loading Pokeman...</div>}>
+                        <PokemonInfo />
+                     </Suspense>
+                </PokemonErrorBoundary>
+            </div>
+         </div>
   )
 }
 
