@@ -4,28 +4,7 @@
 import * as React from 'react'
 import {PokemonDataView, fetchPokemon, PokemonErrorBoundary } from '../pokemon'
 import {Suspense} from 'react'
-
-function createResource(promise) {
-    let status = 'pending'
-    let result = promise.then(
-        resolved => {
-            status = 'success'
-            result = resolved
-        },
-        rejected => {
-            status = 'error'
-            result = rejected
-        },
-    )
-    return {
-        read() {
-            if (status === 'pending') throw result
-            if (status === 'error') throw result
-            if (status === 'success') return result
-            throw new Error('This should be impossible')
-        },
-    }
-}
+import {createResource} from '../utils'
 
 const pokemonResource = createResource(fetchPokemon('pikachu'))
 
