@@ -28,7 +28,7 @@ const preloadImage = (src) => {
   return new Promise(resolve => {
     const img = document.createElement('img')
     img.src = src
-    img.onload = () => resolve(img)
+    img.onload = () => resolve(src)
   })
 }
 
